@@ -4,24 +4,33 @@ class Combinations:
 		self.init_value = 0
 		self.i = -1
 		self.recursion_count = 0
+		self.count = 0
 
 	def generate_combinations(self, n, r):
-		self.i = self.i + 1
+		self.i += 1
 
 		if r == 0:
-			print ( self.arr )
+			yield self.arr
 		else:
 			if self.i != 0:
 				self.init_value = self.arr[self.i-1]
 
 			self.arr[self.i] = self.init_value + 1
-			while self.arr[self.i] <= int(n):
-				self.generate_combinations(n, r - 1)
-				self.arr[self.i] = self.arr[self.i] + 1
 
-		self.i = self.i - 1
+			for x in range(self.arr[self.i], int(n) + 1):
+				self.arr[self.i] = x
+				yield from self.generate_combinations(n, r - 1)
+		self.i -= 1
 
-n = int(input())
-r = int(input())
+
+
+n = int(input('Enter n = '))
+r = int(input('Enter r = '))
 generator = Combinations(n, r)
-generator.generate_combinations(n, r)
+generator = generator.generate_combinations(n, r)
+try:
+	while(True):
+		data = next(generator)
+		print(data)
+except StopIteration as se:
+	print('Done')
